@@ -1,0 +1,47 @@
+@(items: List[models.SubmittedWork],user: models.users.User, env: play.api.Environment)
+@main("Drafts",user){
+    <link rel="stylesheet" href="@routes.Assets.versioned("/stylesheets/works.css")">
+    <h1>Your Drafts</h1>
+    <p>This page contains all of your drafts that are ready to publish at your discretion.</p>
+
+
+    <div class="col-sm-9">
+        @for(i<-items) {
+            @if("d".equals(i.getType) && user.getUsername().equals(i.getUser.getUsername)){
+                <div id="container">
+                        <div class="work-details">
+                            <a href="@routes.HomeController.fullWork(i.getId())">
+                                
+                                    <h4>Rating: @i.getRating</h4>
+                                <div class="work-image">
+                                @if(env.resource("public/images/productImages/" + i.getId + "thumb.jpg").isDefined) {
+                                    <img src="/assets/images/productImages/@(i.getId + "thumb.jpg")"/>
+                                } else {
+                                    <img src="/assets/images/productImages/noImage.jpg"/>
+                                }
+                
+                
+                
+                            <p class="information"> Title: @i.getName</p>
+                
+                
+                            <p class="information"> Author: @i.getUser.getUsername</p>
+                  
+                            <div class = "info">
+                                <li><strong>Preview: </strong>@i.getText</li>
+                            </div> 
+                        </div>         
+                        <div class = "button1">
+                                    @if((user != null) && ((("admin".equals(user.getRole()))) || (user.getUsername().equals(i.getUser.getUsername)))) {
+                                    <a href="@routes.HomeController.updateItem(i.getId)" class="btn btn-warning">Edit</a>
+                                    <a href="@routes.HomeController.deleteItem(i.getId)" class="btn btn-danger" onclick="return confirmDel();">Delete</a>
+                                    <a href="@routes.HomeController.addToPublished(i.getId)" class="btn btn-success">Publish</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                
+                        }
+                    }
+                }
+                 

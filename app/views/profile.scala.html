@@ -1,0 +1,76 @@
+@(bioForm: Form[models.Bio], u: models.users.User, user: models.users.User, env: play.api.Environment)
+
+@import helper._
+@main("Profile",user){
+
+    <link rel="stylesheet" href="@routes.Assets.versioned("/stylesheets/profile.css")">
+    <div class="col-sm-12 well">
+    <h3>Role: @u.getRole</h3>
+    <h3>Username: @u.getUsername</h3>
+    <h3>Name: @u.getName</h3>
+    <h3>Birthday: @u.getDateString</h3>
+    <h3>Address: @u.getAddress</h3>
+
+    <div class="col-sm-12 well">
+        @if((user != null) && (u.getBio == null) && (user == u)){
+        @form(action=routes.HomeController.addBioSubmit(user.getUsername), 'class -> "form-horizontal", 'role -> "form") {
+        @* CSRF attack prevention *@
+        @* This token, sent by the controller, will be used to authenticate the form submission *@
+        @CSRF.formField
+    
+        @textarea(bioForm("text"), '_label -> "", '_showConstraints -> false,'placeholder -> "Add a bio",'rows -> 4,'cols -> 110)
+    
+            @inputText(bioForm("id"), '_label -> "", 'hidden -> "hidden")
+
+            <div class="actions">
+                <input type="submit" value="Submit" class="btn btn-primary">
+                <a href="@routes.HomeController.profile(u.getUsername)">
+                    <button type="button" class="btn btn-warning">Cancel</button>
+                </a>
+            </div>
+                }
+            }
+            @if(u.getBio != null){
+                <h3>Bio</h3>
+                <h4>@u.getBio.getText</h4>
+            }
+    
+    </div>
+    <br>
+    <br>
+</div>
+
+    @for(w <- u.getWorks) {
+        @if(w.getType().equals("p") || w.getType().equals("c")){
+            <div class="col-sm-12">
+            <div id="container">
+                <div class="work-details">
+            <a href="@routes.HomeController.fullWork(w.getId())">
+
+                <h4>Rating: @w.getRating</h4>
+                <div class="work-image">
+                @if(env.resource("public/images/productImages/" + w.getId + "thumb.jpg").isDefined) {
+                    <img src="/assets/images/productImages/@(w.getId + "thumb.jpg")"/>
+                } else {
+                    <img src="/assets/images/productImages/noImage.jpg"/>
+                }
+                <p class="information"> Title: @w.getName</p>
+
+                <p class="information"> Author: @w.getUser.getUsername</p>
+               
+                <div class = "info">
+                    <li><strong>Preview: </strong>@w.getText</li>
+                </div>  
+            </div>     
+            <div class = "button1">
+                @if((user != null) && ((("admin".equals(user.getRole()))) || (user.getUsername().equals(w.getUser.getUsername)))) {
+                <a href="@routes.HomeController.updateItem(w.getId)" class="btn btn-warning">Edit</a>
+                <a href="@routes.HomeController.deleteItem(w.getId)" class="btn btn-danger" onclick="return confirmDel();">Delete</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+        }
+    }
+}

@@ -1,0 +1,4 @@
+[0m[[0m[31merror[0m] [0m[0m/home/wdd/Desktop/git/Year%202%20Project/test/FunctionalTest.java:20:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   class index[0m
+[0m[[0m[31merror[0m] [0m[0m  location: package views.html[0m
+[0m[[0m[31merror[0m] [0m[0m        Content html = views.html.index.render("Your new application is ready.");[0m

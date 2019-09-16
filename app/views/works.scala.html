@@ -1,0 +1,70 @@
+@(items: List[models.SubmittedWork],categories: List[models.Genre],catId: Long, filter: String, user: models.users.User,env: play.api.Environment)
+@main("Home",user){
+    <link rel="stylesheet" href="@routes.Assets.versioned("/stylesheets/works.css")">
+    <h1>User Submitted Works</h1>
+
+    <ul class="nav navbar-nav navbar-right">
+				
+            <div id="action">
+                <form action="@routes.HomeController.works(catId)" method="GET">
+                    <input type="search" id="searchbox" name="filter" value="@filter" placeholder="Filter by work name... ">
+                    <input type="submit" id="searchsubmit" value="Filter by name" class="btn-md btn-primary">
+                </form>
+            </div>
+    
+    </ul>
+
+<div class="col-sm-3">
+    <h4>Categories</h4>
+        <ul class="list-group">
+                <a href = "@routes.HomeController.works(0, filter)" class="list-group-item">All Genres</a>
+            @for(c<-categories) {
+                @if(catId == c.getId){
+                    <a href = "@routes.HomeController.works(c.getId, filter)" class="list-group-item catheight active">@c.getName
+                    </a>
+                }else{
+                <a href = "@routes.HomeController.works(c.getId, filter)" class="list-group-item catheight">@c.getName
+                </a>
+            }
+            }
+        </ul>
+</div>
+<div class="col-sm-9">
+@for(i<-items) {
+    @if("p".equals(i.getType)){
+<div id="container">
+        <div class="work-details">
+            <a href="@routes.HomeController.fullWork(i.getId())">
+                
+                    <h4>Rating: @i.getRating</h4>
+                <div class="work-image">
+                @if(env.resource("public/images/productImages/" + i.getId + "thumb.jpg").isDefined) {
+                    <img src="/assets/images/productImages/@(i.getId + "thumb.jpg")"/>
+                } else {
+                    <img src="/assets/images/productImages/noImage.jpg"/>
+                }
+
+
+
+            <p class="information"> Title: @i.getName</p>
+
+
+            <p class="information"> Author: @i.getUser.getUsername</p>
+  
+            <div class = "info">
+                <li><strong>Preview: </strong>@i.getText</li>
+            </div> 
+        </div>         
+        <div class = "button1">
+                    @if((user != null) && ((("admin".equals(user.getRole()))) || (user.getUsername().equals(i.getUser.getUsername)))) {
+					<a href="@routes.HomeController.updateItem(i.getId)" class="btn btn-warning">Edit</a>
+                    <a href="@routes.HomeController.deleteItem(i.getId)" class="btn btn-danger" onclick="return confirmDel();">Delete</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        }
+    }
+}
+ 

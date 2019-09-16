@@ -1,0 +1,34 @@
+@(itemForm: Form[models.PhysWorks],user: models.users.User)
+
+@import helper._
+
+@main("Add Physical Book", user){
+    <p class="lead">Add a new item</p>
+
+    @form(action=routes.HomeController.addPhysSubmit(), 'class -> "form-horizontal", 'role -> "form",
+    'method -> "POST", 'enctype -> "multipart/form-data"){
+        @CSRF.formField
+
+        <label>Image Upload</label>
+        <input class="btn-sm btn-default" type="file" name="upload"> 
+
+        @inputText(itemForm("name"), '_label -> "Name", 'class -> "form-control")
+        @inputText(itemForm("price"), '_label -> "Price of Book", 'class -> "form-control")
+        @inputText(itemForm("author"), '_label -> "Author", 'class -> "form-control")
+
+        @inputText(itemForm("type").copy(value=Some("d")), '_label -> "",'hidden -> "hidden")
+   
+        @textarea(itemForm("description"), '_label -> "Enter the description of the book to be sold", 'class -> "form-control")
+
+        @inputText(itemForm("stock"), '_label -> "Enter the amount in stock", 'class -> "form-control")
+        
+        @inputText(itemForm("id"), '_label -> "", 'hidden -> "hidden")
+        <div class="actions">
+            <input type="submit" value="Add/Update Book" class ="btn btn-primary">
+            <a href="@routes.HomeController.shop()">
+                <button type="button" class="btn btn-warning">Cancel</button>
+            </a>
+        </div>
+    }
+}
+   

@@ -1,0 +1,42 @@
+@(userForm: Form[models.users.UserPassword2],user: models.users.User)
+
+@import helper._
+
+@main("Register User",user){
+    
+    <p class="lead">Add a new user</p>
+
+    @* Display error message from flash, if it is set *@
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-success">
+			@flash.get("error")
+		</div>
+	}
+
+    @form(action=routes.LoginController.registerUserSubmit(), 'class -> "form-horizontal", 'role -> "form") {
+        @* CSRF attack prevention *@
+        @* This token, sent by the controller, will be used to authenticate the form submission *@
+        @CSRF.formField
+
+            @inputText(userForm("username"), '_label -> "Username", 'class -> "form-control")
+            @inputText(userForm("name"), '_label -> "Name", 'class -> "form-control")
+            @inputText(userForm("email"), '_label -> "Email", 'class -> "form-control")
+            @inputDate(userForm("birthday"), '_label -> "Birthday", 'class -> "form-control")
+            @inputText(userForm("address"), '_label -> "Address", 'class -> "form-control")
+            @inputPassword(userForm("password"), '_label -> "Password", 'class -> "form-control")
+            <p>Note: Password must be at least 6 characters,and containt at least one Uppercase, lowercase letter and number</p>
+            @inputPassword(userForm("password2"), '_label -> "Confirm Password", 'class -> "form-control")
+            
+            @inputText(userForm("role").copy(value=Some("user")), '_label -> "",'hidden -> "hidden")
+            @inputText(userForm("username"), '_label -> "", 'hidden -> "hidden")
+            
+            
+
+            <div class="actions">
+                <input type="submit" value="Register user" class="btn btn-primary">
+                <a href="@routes.LoginController.registerUser()">
+                    <button type="button" class="btn btn-warning">Cancel</button>
+                </a>
+            </div>
+    } @* end of form *@
+} @* end of main *@

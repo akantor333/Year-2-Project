@@ -1,0 +1,17 @@
+2019-04-01 14:04:17 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "PLAY_EVOLUTIONS" not found; SQL statement:
+select id, hash, apply_script, revert_script, state, last_problem from play_evolutions where state like 'applying_%' [42102-197]
+2019-04-10 23:37:18 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "INSERT INTO PHYS_WORKS(NAME,PRICE,AUTHOR,DESCRIPTION) VALUES ('Kafka on the shore',7.99,'Haruki Murakami','A young boy is caugt up with a murder he did not commit and an elderly man meets a strange man.')
+INSERT[*] INTO PHYS_WORKS(NAME,PRICE,AUTHOR,DESCRIPTION) VALUES ('1984',10.99,'George Orwell','Under the authoritarian regime of IngSoc, Winston finds his monotonous life turned upside down and fears for his safety.') "; SQL statement:
+insert into phys_works(name,price,author,description) values ('Kafka on the shore',7.99,'Haruki Murakami','A young boy is caugt up with a murder he did not commit and an elderly man meets a strange man.')
+insert into phys_works(name,price,author,description) values ('1984',10.99,'George Orwell','Under the authoritarian regime of IngSoc, Winston finds his monotonous life turned upside down and fears for his safety.') [42000-197]
+2019-04-26 15:16:24 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "PLAY_EVOLUTIONS" not found; SQL statement:
+select id, hash, apply_script, revert_script, state, last_problem from play_evolutions where state like 'applying_%' [42102-197]
+2019-04-27 19:59:48 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "PLAY_EVOLUTIONS" not found; SQL statement:
+select id, hash, apply_script, revert_script, state, last_problem from play_evolutions where state like 'applying_%' [42102-197]
+2019-04-28 20:16:44 jdbc[43]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "DESCRIPTION VARCHAR(255)": "'A teenage boy, Kafka Tamura, who runs away from home either to escape a gruesome oedipal prophecy or to search for his long-mis... (346)"; SQL statement:
+insert into phys_works (name, price, author, description, stock, user_username) values (?,?,?,?,?,?) [22001-197]

@@ -1,0 +1,46 @@
+@(itemForm: Form[models.SubmittedWork],user: models.users.User)
+
+@import helper._
+
+@main("Submit Work",user){
+    
+    <p class="lead">Add a new submission</p>
+
+    @form(action=routes.HomeController.addSubmissionSubmit(), 'class -> "form-horizontal", 'role -> "form",
+    'method -> "POST", 'enctype -> "multipart/form-data") {
+        @* CSRF attack prevention *@
+        @* This token, sent by the controller, will be used to authenticate the form submission *@
+        @CSRF.formField
+
+            @inputText(itemForm("name"), '_label -> "Name", 'class -> "form-control")
+            <p><strong>Genres</strong></p>
+            @for((value, name)<- Genre.options){
+                <input type="checkbox" name="genreSelect[]" value="@value"
+                    @if(itemForm("id").getValue.isPresent && itemForm("id").getValue.get != ""){
+                        @if(Genre.inGenre(value.toLong, itemForm("id").getValue.get.toLong)){
+                            checked
+                        }
+                    }
+                /> @name </br>
+            }
+        <br>
+            @textarea(itemForm("text"), '_label -> "Content",'placeholder -> "Enter your literary work here",'rows -> 12,'cols -> 110)
+
+            @inputText(itemForm("id"), '_label -> "", 'hidden -> "hidden")
+            @inputText(itemForm("user.username").copy(value=Some(user.getUsername())), '_label -> "",'hidden -> "hidden")
+            @inputText(itemForm("rating").copy(value=Some("0")), '_label -> "",'hidden -> "hidden")
+
+
+            <label>Image Upload</label>
+            <input class="btn-sm btn-default" type="file" name="upload"> 
+
+            @inputText(itemForm("type").copy(value=Some("d")), '_showConstraints -> false,'_label -> "",'hidden -> "hidden")
+
+            <div class="actions">
+                <input type="submit" value="Create Draft/Update Work" class="btn btn-primary">
+                <a href="@routes.HomeController.works(0)">
+                    <button type="button" class="btn btn-warning">Cancel</button>
+                </a>
+            </div>
+    } @* end of form *@
+} @* end of main *@

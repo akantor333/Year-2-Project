@@ -1,0 +1,103 @@
+@(donationForm: Form[models.Donation],itemForm: Form[models.Comment], comments: List[models.Comment],  work: models.SubmittedWork,user: models.users.User, env: play.api.Environment)
+@import helper._
+@main("Works",user){
+    <link rel="stylesheet" href="@routes.Assets.versioned("/stylesheets/fullWorks.css")">
+    <div class="left-column">
+            @if(env.resource("public/images/productImages/" + work.getId + "thumb.jpg").isDefined) {
+                <img src="/assets/images/productImages/@(work.getId + "thumb.jpg")"/>
+            } else {
+                <img src="/assets/images/productImages/noImage.jpg"/>
+            }
+            <div class="work-description">
+            <h1>Title: @work.getName</h1>
+            <a href="@routes.HomeController.profile(work.getUser.getUsername)">
+            <h2>Author: @work.getUser.getUsername</h2>
+            </a>
+            @if(work.getDate != null){
+            <h3>Publish Date: @work.getDateString</h3>}
+            <br>
+            <br>
+            <div class = "text-box">
+            <p>@work.getText</p>
+            </div>
+        </div>
+    </div>
+
+        <div class="right-column">
+                @if(((user != null) && (("admin".equals(user.getRole())))) && ("p".equals(work.getType))) {
+                    <a type="button" value="Add to Curated works" class="btn btn-primary" href="@routes.HomeController.addToCurated(work.getId())">Add to Curated Works</a>
+                }
+    <h3>Rating: @work.getRating</h3>
+    @if(user != null){
+    <a type="button" value="Upvote" class="btn btn-warning" href="@routes.HomeController.upvote(work.getId(),user.getUsername())">+1</a>
+    <a type="button" value="Downvote" class="btn btn-danger" href="@routes.HomeController.downvote(work.getId(),user.getUsername())">-1</a>
+    }
+
+    @form(action=routes.HomeController.addCommentSubmit(work.getId), 'class -> "form-horizontal", 'role -> "form") {
+        @* CSRF attack prevention *@
+        @* This token, sent by the controller, will be used to authenticate the form submission *@
+        @CSRF.formField
+    
+        @textarea(itemForm("text"), '_label -> "",'placeholder -> "Add a comment",'rows -> 4,'cols -> 90)
+    
+            <div class="actions">
+                <input type="submit" value="Submit" class="btn btn-primary">
+                <a href="@routes.HomeController.fullWork(work.getId)">
+                    <button type="button" class="btn btn-warning">Cancel</button>
+                </a>
+            </div>
+            @inputText(itemForm("id"), '_label -> "", 'hidden -> "hidden")
+            @inputText(itemForm("user.username"), '_label -> "", 'hidden -> "hidden")
+            @inputText(itemForm("work.id"), '_label -> "", 'hidden -> "hidden")
+    } @* end of form *@
+        </div>
+
+
+<div class="col-sm-9 well">
+        <p class="lead">Comments</p>
+    @for(i<-comments) {
+        <div class="well">
+        <h5>User: @i.getUser.getUsername </h5>
+        <p>@i.getText</p>
+        @if(((user != null) && (("admin".equals(user.getRole()))))){
+            <a type="button" value="Delete" class="btn btn-danger" href="@routes.HomeController.deleteComment(i.getId)" onclick="return confirmDel();">Delete</a>
+        }
+    </div>
+    }
+</div>
+
+<div class="col-sm-9 well">
+    <h3>Donations</h3>
+    @if((user != null) && (user.getDonation == null)){
+        <h3>Register your Paypal email to enable donations</h3>
+    @form(action=routes.HomeController.addDonationSubmit(work.getId,user.getUsername), 'class -> "form-horizontal", 'role -> "form") {
+    @* CSRF attack prevention *@
+    @* This token, sent by the controller, will be used to authenticate the form submission *@
+    @CSRF.formField
+
+    @inputText(itemForm("donationEmail"), '_label -> "Email", 'class -> "form-control")
+
+        @inputText(itemForm("id"), '_label -> "", 'hidden -> "hidden")
+
+        <div class="actions">
+            <input type="submit" value="Submit" class="btn btn-primary">
+            <a href="@routes.HomeController.fullWork(work.getId)"></a>
+        </div>
+            }
+        }
+            @if((user != null) && (work.getUser.getDonation != null) && (work.getUser.getDonation.getDonationEmail != null)) {
+                <h4>Support this creator by donating!</h4>
+                <h4><form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_donations" />
+                    <input type="hidden" name="business" value=@work.getUser.getDonation.getDonationEmail />
+                    <input type="hidden" name="currency_code" value="USD" />
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+                    <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+                    </form></h4>
+                }else{
+                    <p>This user has not enabled donations</p>
+                }
+
+</div>
+}
+

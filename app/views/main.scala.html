@@ -1,0 +1,84 @@
+@(pagename:String, user: models.users.User)(content:Html)
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="@routes.Assets.versioned("/stylesheets/main.css")"> <meta name="viewport"
+    content="width=device-width, initial-scale=1">
+	<style>
+		.footer { font-weight: bold; color: white; background-color: black; }
+	    .midcol h1 { text-align: center; font-weight: bold; }
+	    .midcol h3 { text-align: center; color: rgb(62, 65, 68); }
+		.account { color:black}
+		
+	</style>
+	<title>Crux @pagename</title>
+</head>
+<body>
+<div class = "container-fluid">
+			<div class="row">
+						<div class="col-sm-12">
+					<img class = "banner" src = "assets/images/CruxBanner.jpg" alt = "Community Banner"></img>
+					</div>
+				</div>
+			
+		
+			
+	<nav class="navbar navbar-inverse">
+			<ul class="nav navbar-nav">
+				<li @if(pagename=="Home" ) {class="active" }><a href="@routes.HomeController.works(0)">Home</a></li>
+				<li @if(pagename=="Curated" ) {class="active" }><a href="@routes.HomeController.curated()">Curated</a></li>
+				<li @if(pagename=="Drafts" ) {class="active" }><a href="@routes.HomeController.drafts()">Drafts</a></li>
+				<li @if(pagename=="Submit Work" ) {class="active" }><a href="@routes.HomeController.addSubmission()">Submit Work</a></li>
+				<li @if(pagename=="Shop" ) {class="active" }><a href="@routes.HomeController.shop()">Shop</a></li>
+				@if(((user != null) && (("admin".equals(user.getRole()))))) {
+				<li @if(pagename=="Users" ) {class="active" }><a href="@routes.HomeController.users()">User List</a></li>
+				}
+			</ul>
+
+				<ul class="nav navbar-nav navbar-right">
+								@if(user != null) {
+									<li type="button" value="Logout" {class="active" }><a href="@routes.LoginController.logout">Log Out</a></li>
+									<li type="button" value="Profile" {class="active" }><a href="@routes.HomeController.profile(user.getUsername())">Profile</a></li>
+									
+								}else{
+									<li type="button" value="Login" {class="active" }><a href="@routes.LoginController.login">Login</a></li>
+									<li type="button" value="Register" {class="active" }><a href="@routes.LoginController.registerUser">Create Account</a></li>
+
+									
+
+										
+								}
+
+						</ul>
+
+	</nav>
+	<div class = "container-fluid">
+
+		@* Display successful new product message from flash, if it is set *@
+		@if(flash.containsKey("success")) {
+		<div class="alert alert-success">
+			@flash.get("success")
+		}
+	</div>
+</div>
+
+<div class = "container-fluid">
+		@content
+	</div>
+
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="well footer">
+					<p class="text-center">© Copyright 2019, Crux.com</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+	<script src ="@routes.Assets.versioned("javascripts/main.js")"></script>
+ </body>
+  </html>

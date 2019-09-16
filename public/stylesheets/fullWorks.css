@@ -1,0 +1,21 @@
+.left-column {
+    display: block;
+    float: left;
+    width: 50%;
+    position: relative;
+  }
+  .right-column {
+  display: block;
+  float: left;
+  width: 50%;
+  text-align: left;
+  margin-top: 60px;
+  line-height: 1.6;
+}
+.left-column img {
+  width: 20%;
+}
+  
+.left-column img.active {
+  opacity: 1;
+}

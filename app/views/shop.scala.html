@@ -1,0 +1,84 @@
+@(items: List[models.PhysWorks], filter: String, user: models.users.User, env: play.api.Environment)
+@main("Shop",user){
+    <link rel="stylesheet" href="@routes.Assets.versioned("/stylesheets/shop.css")">
+    <ul class="nav navbar-nav navbar-right">
+    <div id="action">
+        <form action="@routes.HomeController.shop()" method="GET"> 
+            <input type="search" id="searchbox" name="filter" value="@filter" placeholder="Filter by book name... ">
+            <input type="submit" id="searchsubmit" value="Filter by name" class="btn-md btn-primary">
+        </form>
+    </div>
+</ul>
+
+    <div class="col-sm-9">
+            <table class="table table-bordered table-hover table-condensed">
+    
+    <thead>
+            <tr>
+                    <th>Image</th>
+            <th>Name</th>
+            <th>Author</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Stock</th>
+                @if((user != null) && ((("user".equals(user.getRole()))))) {
+                    <th>Buy</th>
+                }
+                
+        </tr>
+    </thead>
+    <tbody>
+    @for(i<-items) {
+        <tr>
+                @if(env.resource("public/images/productImages/" + i.getId + "thumb.jpg").isDefined) {
+                    <td> <img src="/assets/images/productImages/@(i.getId + "thumb.jpg")"/></td>
+                } else {
+                    <td> <img src="/assets/images/productImages/noImage.jpg"/></td>
+                }
+        			
+                <td>@i.getName</td>
+                <td>@i.getAuthor</td>
+                <td>@i.getDescription</td>
+                <td>&euro; @("%.2f".format(i.getPrice))</td>
+                <td>@i.getStock</td>
+        
+
+                @if((user != null)) {
+                    @if(i.getStock()>0){
+                      <td><a href="@routes.ShoppingCtrl.addToBasket(i.getId)" 
+                          class="btn btn-default btn-xs"><span 
+                          class="glyphicon glyphicon-shopping-cart"></span></a>
+                      </td>
+                  }else{
+                      <td><img src="/assets/images/oos.jpg"/></td>
+                  }
+                }
+            <!--Only checks to see if the user is admin-->
+            @if((user != null) && ((("admin".equals(user.getRole()))))) {
+                <td>
+                <!--Update Book Button-->
+                <a href="@routes.HomeController.updateBook(i.getId)" class="button-xs btn-warning">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </a>
+            </td>
+            <td>
+                <!--Delete Book Button-->
+                <a href="@routes.HomeController.deleteBook(i.getId)" class="button-xs btn-danger" onclick="return confirmDel();">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </a>
+            </td>
+        }
+            </tr>
+            }
+            @if((user != null) && ((("admin".equals(user.getRole()))))) {
+                <p>
+                <a href = "@routes.HomeController.addPhys()">
+                    <button class="btn btn-warning">Add New Book</button>
+                </a>
+            </p>
+            }
+        </tbody>
+    </table>
+</div>
+        }
+    

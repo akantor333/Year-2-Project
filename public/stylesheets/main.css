@@ -1,0 +1,13 @@
+body {
+    background-color: white;
+	}
+.container-fluid{
+    background-color: rgb(207, 207, 207);
+	background-attachment: fixed;	
+	background-size: cover;
+    width: 90%;
+    height: 100%;
+}
+.row img{
+    width: 100%;
+}

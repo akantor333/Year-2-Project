@@ -1,0 +1,48 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /                           controllers.HomeController.works(cat:Long?=0, filter?="")
+GET     /curated                    controllers.HomeController.curated
+GET     /drafts                     controllers.HomeController.drafts
+GET     /shop                       controllers.HomeController.shop(filter?="")
+GET     /addPhys                    controllers.HomeController.addPhys
+POST    /addPhysSubmit              controllers.HomeController.addPhysSubmit(filter?="")
+GET     /deleteBook/:id             controllers.HomeController.deleteBook(id: Long, filter?="")
+GET     /updateBook/:id             controllers.HomeController.updateBook(id: Long)
+GET     /showBasket                 controllers.ShoppingCtrl.showBasket()
+GET     /addToBasket/:id            controllers.ShoppingCtrl.addToBasket(id: Long)
+GET     /addOne/:itemId             controllers.ShoppingCtrl.addOne(itemId: Long, pid: Long)
+GET     /removeOne/:itemId          controllers.ShoppingCtrl.removeOne(itemId: Long, pid: Long)
+GET     /emptyBasket                controllers.ShoppingCtrl.emptyBasket()
+GET     /placeOrder                 controllers.ShoppingCtrl.placeOrder()
+GET     /viewOrder/:id              controllers.ShoppingCtrl.viewOrder(id: Long)
+GET     /addSubmission              controllers.HomeController.addSubmission
+GET     /profile/:uid                      controllers.HomeController.profile(uid: String)
+POST    /addBioSubmit/:uid         controllers.HomeController.addBioSubmit(uid: String)
+POST    /addSubmissionSubmit        controllers.HomeController.addSubmissionSubmit
+POST    /addDonationSubmit/:id/:uid         controllers.HomeController.addDonationSubmit(id: Long, uid: String)
+GET     /deleteItem/:id             controllers.HomeController.deleteItem(id: Long)
+GET     /updateItem/:id             controllers.HomeController.updateItem(id: Long)
+GET     /fullWork/:id               controllers.HomeController.fullWork(id: Long)
+GET     /addToCurated/:id           controllers.HomeController.addToCurated(id: Long)
+GET     /addToPublished/:id         controllers.HomeController.addToPublished(id: Long, cat:Long?=0, filter?="")
+GET     /registerUser               controllers.LoginController.registerUser
+POST    /registerUserSubmit         controllers.LoginController.registerUserSubmit()
+GET     /upvote/:id/:username                 controllers.HomeController.upvote(id: Long,username: String)
+GET     /downvote/:id/:username                 controllers.HomeController.downvote(id: Long,username: String)
+GET     /login                      controllers.LoginController.login
+GET     /loginSubmit                controllers.LoginController.loginSubmit
+POST    /addCommentSubmit/:wid        controllers.HomeController.addCommentSubmit(wid: Long)
+GET     /deleteComment/:id              controllers.HomeController.deleteComment(id: Long)
+GET     /users                      controllers.HomeController.users
+
+GET     /logout                     controllers.LoginController.logout
+# An example controller showing how to use dependency injection
+GET     /count                      controllers.CountController.count
+# An example controller showing how to write asynchronous code
+GET     /message                    controllers.AsyncController.message
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
